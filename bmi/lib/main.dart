@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const HomePage(bmi: 0, height: 0, weight: 0),
+      home:  const BMIForm(),
       theme: ThemeData(primarySwatch: Colors.blue),
     );
   }

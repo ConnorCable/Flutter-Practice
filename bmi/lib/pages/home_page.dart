@@ -1,20 +1,29 @@
 import 'package:bmi/entry_form.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  final int bmi;
-  final int height;
-  final int weight;
-  final weightcontroller;
-  final heightcontroller;
+class BMIForm extends StatefulWidget {
+  const BMIForm({super.key});
 
-  const HomePage(
-      {super.key,
-      required this.bmi,
-      required this.height,
-      required this.weight,
-      this.weightcontroller,
-      this.heightcontroller});
+  @override
+  State<BMIForm> createState() => _BMIFormState();
+}
+
+class _BMIFormState extends State<BMIForm> {
+  final TextEditingController weightcontroller = TextEditingController();
+  final TextEditingController heightcontroller = TextEditingController();
+
+  double? _result;
+
+  void calculateBMI() {
+    double height = double.parse(heightcontroller.text) / 100;
+    double weight = double.parse(weightcontroller.text);
+
+    double heightSquare = height * height;
+    double result = weight / heightSquare;
+    setState(() {
+      _result = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +32,36 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.amber,
       body: ListView(
         children: [
-          SizedBox(height: 100),
+          const SizedBox(height: 100),
           Text(
-            "Your BMI is $bmi",
+            _result == null ? "Enter Value" : " Your BMI is: $_result",
             textAlign: TextAlign.center,
           ),
-          SizedBox(
+          const SizedBox(
             height: 200,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              EntryForm(value: height, name: "Height"),
-              EntryForm(value: weight, name: "Weight"),
+              EntryForm(
+                name: "Height",
+                controller: heightcontroller,
+              ),
+              EntryForm(name: "Weight", controller: weightcontroller),
             ],
           ),
+          const SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: MaterialButton(
+                color: Theme.of(context).primaryColor,
+                minWidth: 20,
+                height: 50,
+                onPressed: () {
+                  calculateBMI();
+                },
+                child: const Text("Calculate")),
+          )
         ],
       ),
     );
